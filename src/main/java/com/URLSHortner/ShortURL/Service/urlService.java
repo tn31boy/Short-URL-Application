@@ -13,23 +13,30 @@ public class urlService {
     @Autowired
     UrlRepository urlRepository;
 
-    public UrlInfo shortUrl(String url,int id)
+    public UrlInfo shortUrlService(String url,int id)
     {
 
-        String shortUrl=base62Conversion(url);
+        String shortUrl=base62Conversion(1234455);
+        UrlInfo shortUrlData=urlRepository.save(UrlInfo.builder().id(1).LongUrl(url).Shorturl(shortUrl).UserId(10).build());
+        return shortUrlData;
     }
 
-    public static String base62Conversion(String url)
+    public static String base62Conversion(long id)
     {
         String mapTo62="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String convertedUrl="";
         int i=0;
-        int n= url.length();
+        long base=62;
 
-        while(i<n)
+
+        while(id!=0)
         {
-            int rem=
+            long rem=id%base;
+            convertedUrl=(""+rem)+convertedUrl;
+            id/=62;
+
         }
+        return convertedUrl;
     }
 
 
