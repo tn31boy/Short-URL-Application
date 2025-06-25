@@ -2,22 +2,25 @@ package com.URLSHortner.ShortURL.Service;
 
 import com.URLSHortner.ShortURL.Entity.UrlInfo;
 import com.URLSHortner.ShortURL.Repository.UrlRepository;
+import com.URLSHortner.ShortURL.Strategies.SnowFlake.IdGenerationAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
-public class urlService {
+public class UrlService {
 
     @Autowired
     UrlRepository urlRepository;
 
+    @Autowired
+    IdGenerationAlgorithm idGenerationAlgorithm;
+
     public UrlInfo shortUrlService(String url,int id)
     {
-
-        String shortUrl=base62Conversion(1234455);
-        UrlInfo shortUrlData=urlRepository.save(UrlInfo.builder().id(1).LongUrl(url).Shorturl(shortUrl).UserId(10).build());
+        long  urlId=idGenerationAlgorithm.generateID();
+        String shortUrl=base62Conversion(urlId);
+        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).Shorturl(shortUrl).UserId(id).build();
+        urlRepository.save(shortUrlData);
         return shortUrlData;
     }
 
@@ -31,8 +34,8 @@ public class urlService {
 
         while(id!=0)
         {
-            long rem=id%base;
-            convertedUrl=(""+rem)+convertedUrl;
+            int rem=(int)(id%base);
+            convertedUrl=(""+mapTo62.charAt(rem))+convertedUrl;
             id/=62;
 
         }

@@ -1,19 +1,19 @@
 package com.URLSHortner.ShortURL.Entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+@Table(name = "urlInfo")
 @Entity
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UrlInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    long id;
 
     @Column(nullable=false)
     String LongUrl;
