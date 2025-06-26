@@ -15,11 +15,14 @@ public class UrlService {
     @Autowired
     IdGenerationAlgorithm idGenerationAlgorithm;
 
+    @Autowired
+    RedisService redisService;
+
     public UrlInfo shortUrlService(String url,int id)
     {
         long  urlId=idGenerationAlgorithm.generateID();
         String shortUrl=base62Conversion(urlId);
-        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).Shorturl(shortUrl).UserId(id).build();
+        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).shortUrl(shortUrl).UserId(id).build();
         urlRepository.save(shortUrlData);
         return shortUrlData;
     }
@@ -41,6 +44,21 @@ public class UrlService {
         }
         return convertedUrl;
     }
+
+
+    public String getLongUrl(String shortUrl)
+    {
+
+        UrlInfo object=urlRepository.findByshortUrl(shortUrl);
+
+
+        if(object==null)
+            return "";
+
+        System.out.println(redisService.save(shortUrl,object.getLongUrl()));
+        return object.getLongUrl();
+    }
+
 
 
 

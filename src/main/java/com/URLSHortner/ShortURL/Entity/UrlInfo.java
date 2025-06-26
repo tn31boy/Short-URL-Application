@@ -18,8 +18,8 @@ public class UrlInfo {
     @Column(nullable=false)
     String LongUrl;
 
-    @Column(nullable=false)
-    String Shorturl;
+    @Column(nullable=false,unique = true)
+    String shortUrl;
 
     @Column(nullable=false)
     int UserId;
