@@ -30,7 +30,11 @@ public class UrlGenerateController {
     @GetMapping("/{ShortUrl}")
     public ResponseEntity<?> toLongUrl(@PathVariable("ShortUrl") String shortUrlBase62)
     {
+        System.out.println(shortUrlBase62);
         String longUrl=urlService.getLongUrl(shortUrlBase62);
+
+        if(longUrl.equals("expired"))
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("your url is expired");
 
         if(longUrl.isEmpty())
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("url not found");

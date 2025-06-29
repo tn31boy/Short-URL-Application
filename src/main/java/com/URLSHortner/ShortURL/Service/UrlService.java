@@ -22,7 +22,8 @@ public class UrlService {
     {
         long  urlId=idGenerationAlgorithm.generateID();
         String shortUrl=base62Conversion(urlId);
-        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).shortUrl(shortUrl).UserId(id).build();
+        long millis=System.currentTimeMillis()+(30 * 1000L);
+        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).shortUrl(shortUrl).UserId(id).expiration(millis).build();
         urlRepository.save(shortUrlData);
         return shortUrlData;
     }
@@ -50,14 +51,22 @@ public class UrlService {
     {
 
         UrlInfo object=urlRepository.findByshortUrl(shortUrl);
-
+        System.out.println(object+" "+"post query");
 
         if(object==null)
             return "";
+        if(isExpire(object.getExpiration()))
+            return "expired";
 
-        System.out.println(redisService.save(shortUrl,object.getLongUrl()));
+       // System.out.println(redisService.save(shortUrl,object.getLongUrl()));
         return object.getLongUrl();
     }
+
+    public static boolean isExpire(long expiration)
+    {
+        return expiration<=System.currentTimeMillis();
+    }
+
 
 
 

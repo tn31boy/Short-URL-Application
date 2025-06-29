@@ -23,4 +23,6 @@ public class UrlInfo {
 
     @Column(nullable=false)
     int UserId;
+
+    long expiration;
 }
