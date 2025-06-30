@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class RedisService {
 
@@ -12,10 +14,15 @@ public class RedisService {
     @Qualifier("redisStringConfig")
     RedisTemplate<String,String> redisTemplate;
 
-    public  int save(String key,String value)
+    public  int save(String key, String value, long duration, TimeUnit unit)
     {
-        redisTemplate.opsForValue().set(key,value);
+        redisTemplate.opsForValue().set(key,value,duration,unit);
         return 1;
+    }
+
+    public String get(String key)
+    {
+        return redisTemplate.opsForValue().get(key);
     }
 
 }

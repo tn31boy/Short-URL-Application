@@ -6,6 +6,8 @@ import com.URLSHortner.ShortURL.Strategies.SnowFlake.IdGenerationAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 public class UrlService {
 
@@ -22,7 +24,7 @@ public class UrlService {
     {
         long  urlId=idGenerationAlgorithm.generateID();
         String shortUrl=base62Conversion(urlId);
-        long millis=System.currentTimeMillis()+(30 * 1000L);
+        long millis=System.currentTimeMillis()+(120 * 1000L);
         UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).shortUrl(shortUrl).UserId(id).expiration(millis).build();
         urlRepository.save(shortUrlData);
         return shortUrlData;
@@ -50,6 +52,11 @@ public class UrlService {
     public String getLongUrl(String shortUrl)
     {
 
+        String url=redisService.get(shortUrl);
+        if(url !=null && !url.isEmpty())
+            return url;
+
+
         UrlInfo object=urlRepository.findByshortUrl(shortUrl);
         System.out.println(object+" "+"post query");
 
@@ -58,7 +65,8 @@ public class UrlService {
         if(isExpire(object.getExpiration()))
             return "expired";
 
-       // System.out.println(redisService.save(shortUrl,object.getLongUrl()));
+       System.out.println(redisService.save(shortUrl,object.getLongUrl(),60, TimeUnit.SECONDS));
+
         return object.getLongUrl();
     }
 
