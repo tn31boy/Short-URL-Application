@@ -16,7 +16,7 @@ public class UrlInfo {
     long id;
 
     @Column(nullable=false)
-    String LongUrl;
+    String longUrl;
 
     @Column(nullable=false,unique = true)
     String shortUrl;

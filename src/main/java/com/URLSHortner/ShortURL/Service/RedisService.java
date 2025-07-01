@@ -25,4 +25,15 @@ public class RedisService {
         return redisTemplate.opsForValue().get(key);
     }
 
+    public void updateUrl(String shortUrl,String url)
+    {
+        redisTemplate.opsForValue().set(shortUrl,url);
+    }
+
+    public void delete(String key)
+    {
+        redisTemplate.delete(key);
+    }
+
+
 }

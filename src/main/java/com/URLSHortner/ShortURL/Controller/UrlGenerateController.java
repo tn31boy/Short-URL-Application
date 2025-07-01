@@ -5,9 +5,7 @@ import com.URLSHortner.ShortURL.Service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 
@@ -41,4 +39,28 @@ public class UrlGenerateController {
 
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(longUrl)).build();
     }
+
+    @PutMapping("/{shortUrl}")
+    public ResponseEntity<?> updateUrl(@PathVariable("shortUrl") String shortUrl,@RequestParam("url") String url )
+    {
+        int isUpdate =urlService.urlUpdater(shortUrl,url);
+
+        if(isUpdate==0)
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("url Not present");
+
+        return ResponseEntity.status(HttpStatus.FOUND).body("url changed Successfully");
+    }
+
+
+    @DeleteMapping("/{shortUrl}")
+    public ResponseEntity<?> deleteUrl(@PathVariable("shortUrl") String shortUrl)
+    {
+        int isDelete=urlService.deleteUrl(shortUrl);
+
+        if(isDelete==0)
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Url input is not Valid");
+
+        return ResponseEntity.status(HttpStatus.FOUND).body("deleted");
+    }
+
 }

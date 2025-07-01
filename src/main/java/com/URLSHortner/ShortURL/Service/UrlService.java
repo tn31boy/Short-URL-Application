@@ -3,6 +3,8 @@ package com.URLSHortner.ShortURL.Service;
 import com.URLSHortner.ShortURL.Entity.UrlInfo;
 import com.URLSHortner.ShortURL.Repository.UrlRepository;
 import com.URLSHortner.ShortURL.Strategies.SnowFlake.IdGenerationAlgorithm;
+import jakarta.transaction.Transactional;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ public class UrlService {
         long  urlId=idGenerationAlgorithm.generateID();
         String shortUrl=base62Conversion(urlId);
         long millis=System.currentTimeMillis()+(120 * 1000L);
-        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).LongUrl(url).shortUrl(shortUrl).UserId(id).expiration(millis).build();
+        UrlInfo shortUrlData=UrlInfo.builder().id(urlId).longUrl(url).shortUrl(shortUrl).UserId(id).expiration(millis).build();
         urlRepository.save(shortUrlData);
         return shortUrlData;
     }
@@ -69,6 +71,32 @@ public class UrlService {
 
         return object.getLongUrl();
     }
+
+
+    @Transactional
+    public int urlUpdater(String shortUrl,String url)
+    {
+        int isUpdate =urlRepository.updateUrl(shortUrl,url);
+
+        if(isUpdate==0)
+            return 0;
+        redisService.updateUrl(shortUrl,url);
+        return isUpdate;
+    }
+
+    @Transactional
+    public int deleteUrl(String shortUrl)
+    {
+
+        int isDelete=urlRepository.deleteByshortUrl(shortUrl);
+        if(isDelete==0)
+            return 0;
+
+        redisService.delete(shortUrl);
+
+        return 1;
+    }
+
 
     public static boolean isExpire(long expiration)
     {
