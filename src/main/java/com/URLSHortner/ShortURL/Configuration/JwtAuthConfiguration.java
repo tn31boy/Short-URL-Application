@@ -14,7 +14,7 @@ public class JwtAuthConfiguration {
         FilterRegistrationBean filterRegistrationBean=new FilterRegistrationBean<>();
 
         filterRegistrationBean.setFilter(new JwtAuthFilter());
-        filterRegistrationBean.addUrlPatterns("/api/*");
+        filterRegistrationBean.addUrlPatterns("/genrate", "/update/*" , "/delete/*");
         filterRegistrationBean.setOrder(1);
 
         return filterRegistrationBean;

@@ -2,9 +2,11 @@ package com.URLSHortner.ShortURL.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class JwtUtils {
 
     private final String privateKey="secret";
@@ -24,6 +26,7 @@ public class JwtUtils {
         catch(Exception e) {
             System.out.println(e);
         }
+        return null;
 
     }
 

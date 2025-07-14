@@ -40,7 +40,7 @@ public class UrlGenerateController {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(longUrl)).build();
     }
 
-    @PutMapping("/{shortUrl}")
+    @PutMapping("/update/{shortUrl}")
     public ResponseEntity<?> updateUrl(@PathVariable("shortUrl") String shortUrl,@RequestParam("url") String url )
     {
         int isUpdate =urlService.urlUpdater(shortUrl,url);
@@ -52,7 +52,7 @@ public class UrlGenerateController {
     }
 
 
-    @DeleteMapping("/{shortUrl}")
+    @DeleteMapping("/delete/{shortUrl}")
     public ResponseEntity<?> deleteUrl(@PathVariable("shortUrl") String shortUrl)
     {
         int isDelete=urlService.deleteUrl(shortUrl);
