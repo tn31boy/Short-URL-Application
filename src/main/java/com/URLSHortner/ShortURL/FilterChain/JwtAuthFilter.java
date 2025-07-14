@@ -35,11 +35,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return ;
         }
 
-        String subject=jwtUtils.isTokenValid(token);
 
-        if(subject==null)
+
+        try {
+
+            String subject=jwtUtils.isTokenValid(token);
+            if (subject == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "token Expired");
+                return;
+            }
+        }catch(Exception e)
         {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"token Expired");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"invalid token");
             return ;
         }
 
