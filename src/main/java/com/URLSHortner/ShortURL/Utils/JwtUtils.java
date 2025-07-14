@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 
 import java.util.Date;
 
-public class Jwt {
+public class JwtUtils {
 
     private final String privateKey="secret";
 
